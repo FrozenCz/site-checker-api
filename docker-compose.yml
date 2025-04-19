@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  postgres_jana:
+    container_name: postgresDB_jana
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=jana_nest
+    volumes:
+      - ./db-init/init-schema.sh:/docker-entrypoint-initdb.d/init-schema.sh
+      #      - ./db-init/db.sql:/docker-entrypoint-initdb.d/db.sql
+      - postgres-jana:/data/postgres
+    #command: --init-file /data/application/db.sql
+    ports:
+      - "5430:5432"  # Ensure this line is present
+    networks:
+      - dockerNetJana
+
+  pgadmin_jana:
+    container_name: pgadmin_container_jana
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - ./db-init/servers.json:/pgadmin4/servers.json
+      - ./db-init/pgpass:/pgpass
+      - pgadmin_jana:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5056}:80"
+    networks:
+      - dockerNetJana
+    depends_on:
+      - postgres_jana
+    restart: unless-stopped
+
+  dev_jana:
+    container_name: jana_api
+    image: jana_api_dev:0.2
+    build:
+      context: .
+      target: development
+      dockerfile: ./Dockerfile
+    command: npm run start:dev
+    ports:
+      #      - 3011:3000
+      - 3104:3000
+      - 9253:9229
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - app-public:/usr/src/app/public
+    depends_on:
+      - postgres_jana
+      - pgadmin_jana
+    restart: unless-stopped
+    networks:
+      - dockerNetJana
+
+networks:
+  dockerNetJana:
+    driver: bridge
+
+volumes:
+  postgres-jana:
+  pgadmin_jana:
+  app-public:
+    driver: local
+
+
+

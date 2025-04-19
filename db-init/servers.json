@@ -1,0 +1,15 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Optoprac",
+      "Group": "Servers",
+      "Host": "postgresDB_optoprac",
+      "Port": 5432,
+      "PasswordDB": "postgres",
+      "MaintenanceDB": "postgres",
+      "Username": "postgres",
+      "PassFile": "/pgpass",
+      "SSLMode": "prefer"
+    }
+  }
+}
