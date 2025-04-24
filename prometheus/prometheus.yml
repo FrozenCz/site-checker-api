@@ -7,3 +7,8 @@ scrape_configs:
     metrics_path: '/metrics'
     static_configs:
       - targets: ['dev_site_checker:3000']
+
+  - job_name: 'node-exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['node-exporter:9100']
