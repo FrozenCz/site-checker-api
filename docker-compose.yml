@@ -1,26 +1,26 @@
 version: '3.8'
 
 services:
-  postgres_jana:
-    container_name: postgresDB_jana
+  postgres_site_checker:
+    container_name: postgresDB_site_checker
     image: postgres:alpine
     restart: unless-stopped
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=jana_nest
+      - POSTGRES_DB=site_checker
     volumes:
       - ./db-init/init-schema.sh:/docker-entrypoint-initdb.d/init-schema.sh
       #      - ./db-init/db.sql:/docker-entrypoint-initdb.d/db.sql
-      - postgres-jana:/data/postgres
+      - postgres_site_checker:/data/postgres
     #command: --init-file /data/application/db.sql
     ports:
       - "5430:5432"  # Ensure this line is present
     networks:
-      - dockerNetJana
+      - dockerSiteChecker
 
-  pgadmin_jana:
-    container_name: pgadmin_container_jana
+  pgadmin_site_checker:
+    container_name: pgadmin_container_site_checker
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
@@ -29,18 +29,18 @@ services:
     volumes:
       - ./db-init/servers.json:/pgadmin4/servers.json
       - ./db-init/pgpass:/pgpass
-      - pgadmin_jana:/var/lib/pgadmin
+      - pgadmin_site_checker:/var/lib/pgadmin
     ports:
       - "${PGADMIN_PORT:-5056}:80"
     networks:
-      - dockerNetJana
+      - dockerSiteChecker
     depends_on:
-      - postgres_jana
+      - postgres_site_checker
     restart: unless-stopped
 
-  dev_jana:
-    container_name: jana_api
-    image: jana_api_dev:0.2
+  dev_site_checker:
+    container_name: dev_site_checker-api
+    image: site_checker_api_dev:0.1
     build:
       context: .
       target: development
@@ -48,26 +48,26 @@ services:
     command: npm run start:dev
     ports:
       #      - 3011:3000
-      - 3104:3000
-      - 9253:9229
+      - 3105:3000
+      - 9254:9229
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
       - app-public:/usr/src/app/public
     depends_on:
-      - postgres_jana
-      - pgadmin_jana
+      - postgres_site_checker
+      - pgadmin_site_checker
     restart: unless-stopped
     networks:
-      - dockerNetJana
+      - dockerSiteChecker
 
 networks:
-  dockerNetJana:
+  dockerSiteChecker:
     driver: bridge
 
 volumes:
-  postgres-jana:
-  pgadmin_jana:
+  postgres_site_checker:
+  pgadmin_site_checker:
   app-public:
     driver: local
 
