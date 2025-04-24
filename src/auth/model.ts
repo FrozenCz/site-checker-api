@@ -8,9 +8,11 @@ export class LoginDTO {
   pass: string;
 }
 
-
 export interface User {
+  login: string;
+}
 
-  login: string
-
+export class RefreshLoginDTO {
+  @IsString()
+  refresh_token: string;
 }

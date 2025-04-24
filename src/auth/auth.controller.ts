@@ -7,8 +7,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDTO, User } from './model';
-import { GetUser } from './getUser.decorator';
+import { LoginDTO, RefreshLoginDTO, User } from './model';
+import { GetUser } from './decorators/getUser.decorator';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/auth')
@@ -18,8 +18,17 @@ export class AuthController {
   @Post('login')
   login(
     @Body(ValidationPipe) loginDTO: LoginDTO,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ access_token: string; refresh_token: string }> {
     return this.authService.login({ pass: loginDTO.pass, user: loginDTO.name });
+  }
+
+  @Post('login-refresh')
+  loginRefresh(
+    @Body(ValidationPipe) refreshLoginDTO: RefreshLoginDTO,
+  ): Promise<{ refresh_token: string }> {
+    return this.authService.loginRefresh({
+      refresh_token: refreshLoginDTO.refresh_token,
+    });
   }
 
   @UseGuards(AuthGuard())
