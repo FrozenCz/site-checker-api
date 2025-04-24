@@ -11,6 +11,8 @@ import { ImagesModule } from './images/images.module';
 import { AdvertisementController } from './advertisement/advertisement.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import { PrometheusModule } from './prometheus/prometheus.module';
+import { HealthModule } from './health/health.module';
 
 interface GqpConfig extends ApolloDriverConfig {
   cors?: {
@@ -60,6 +62,8 @@ interface GqpConfig extends ApolloDriverConfig {
     TestSourceModule,
     AdvertisementModule,
     ImagesModule,
+    PrometheusModule,
+    HealthModule,
   ],
   providers: [],
 })

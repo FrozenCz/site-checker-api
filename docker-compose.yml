@@ -61,6 +61,20 @@ services:
     networks:
       - dockerSiteChecker
 
+  prometheus:
+    container_name: prometheus_site_checker
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - dockerSiteChecker
+    depends_on:
+      - dev_site_checker
+    restart: unless-stopped
+
 networks:
   dockerSiteChecker:
     driver: bridge
@@ -70,6 +84,5 @@ volumes:
   pgadmin_site_checker:
   app-public:
     driver: local
-
-
-
+  prometheus_data:
+    driver: local

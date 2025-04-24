@@ -68,6 +68,69 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
 
+## Monitoring with Prometheus
+
+This application includes Prometheus for monitoring and metrics collection. Prometheus is a powerful monitoring and alerting toolkit that collects and stores metrics as time series data.
+
+### Metrics Endpoints
+
+The application exposes the following metrics endpoints:
+
+- `/metrics` - Default Prometheus metrics for the NestJS application
+- `/health` - Health check endpoint that provides information about the application's health
+
+### Accessing Prometheus
+
+When running the application with Docker Compose, Prometheus is available at:
+
+```
+http://localhost:9090
+```
+
+From the Prometheus UI, you can:
+- View metrics in real-time
+- Create graphs and visualizations
+- Set up alerts based on metric thresholds
+
+### Available Metrics
+
+The application provides the following types of metrics:
+
+1. **Default Node.js metrics**:
+   - CPU usage
+   - Memory usage
+   - Event loop lag
+   - Active handles and requests
+
+2. **Health metrics**:
+   - Database connection status
+   - Overall application health
+
+### Adding Custom Metrics
+
+To add custom metrics to your application, you can use the `@willsoto/nestjs-prometheus` package. For example:
+
+```typescript
+import { Injectable } from '@nestjs/common';
+import { InjectMetric } from '@willsoto/nestjs-prometheus';
+import { Counter } from 'prom-client';
+
+@Injectable()
+export class YourService {
+  constructor(
+    @InjectMetric('your_metric_name')
+    private readonly yourMetric: Counter,
+  ) {}
+
+  doSomething() {
+    // Increment the counter when this method is called
+    this.yourMetric.inc();
+
+    // Your business logic here
+  }
+}
+```
+
 ## License
 
 Nest is [MIT licensed](LICENSE).

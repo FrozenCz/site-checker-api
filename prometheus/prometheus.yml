@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'nestjs'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['dev_site_checker:3000']
+
+  - job_name: 'nestjs-health'
+    metrics_path: '/health'
+    static_configs:
+      - targets: ['dev_site_checker:3000']
