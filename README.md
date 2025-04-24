@@ -68,9 +68,9 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
 
-## Monitoring with Prometheus
+## Monitoring with Prometheus and Grafana
 
-This application includes Prometheus for monitoring and metrics collection. Prometheus is a powerful monitoring and alerting toolkit that collects and stores metrics as time series data.
+This application includes Prometheus for metrics collection and Grafana for visualization and monitoring. Together, they provide a powerful monitoring solution for your application.
 
 ### Metrics Endpoints
 
@@ -91,6 +91,20 @@ From the Prometheus UI, you can:
 - View metrics in real-time
 - Create graphs and visualizations
 - Set up alerts based on metric thresholds
+
+### Accessing Grafana
+
+Grafana is a visualization and analytics platform that allows you to query, visualize, and alert on your metrics. When running the application with Docker Compose, Grafana is available at:
+
+```
+http://localhost:3205
+```
+
+Default login credentials:
+- Username: admin
+- Password: admin
+
+Grafana is pre-configured with Prometheus as a data source, so you can immediately start creating dashboards to visualize your application metrics.
 
 ### Available Metrics
 

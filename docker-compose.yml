@@ -75,6 +75,20 @@ services:
       - dev_site_checker
     restart: unless-stopped
 
+  grafana:
+    container_name: grafana_site_checker
+    image: grafana/grafana:latest
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "3205:3000"
+    networks:
+      - dockerSiteChecker
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+
 networks:
   dockerSiteChecker:
     driver: bridge
@@ -85,4 +99,6 @@ volumes:
   app-public:
     driver: local
   prometheus_data:
+    driver: local
+  grafana_data:
     driver: local
