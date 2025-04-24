@@ -4,11 +4,9 @@ import { TestSource } from './entities/test-source.entity';
 import { CreateTestSourceInput } from './dto/create-test-source.input';
 import { UpdateTestSourceInput } from './dto/update-test-source.input';
 import { Logger, UseGuards } from '@nestjs/common';
-import { GetUser, GetUserGql } from '../auth/getUser.decorator';
 import { User } from '../auth/model';
-import { AuthGuard } from '@nestjs/passport';
 import { GqlAuthGuard } from '../auth/auth.guard';
-
+import { GetUserGql } from 'src/auth/decorators/getUserGql.decorator';
 
 @Resolver(() => TestSource)
 export class TestSourceResolver {
@@ -17,16 +15,16 @@ export class TestSourceResolver {
   constructor(private readonly testSourceService: TestSourceService) {}
 
   @Mutation(() => TestSource)
-  createTestSource(@Args('createTestSourceInput') createTestSourceInput: CreateTestSourceInput) {
+  createTestSource(
+    @Args('createTestSourceInput') createTestSourceInput: CreateTestSourceInput,
+  ) {
     return this.testSourceService.create(createTestSourceInput);
   }
 
   @UseGuards(GqlAuthGuard)
   @Query(() => [TestSource], { name: 'testSources' })
-  findAll(
-    @GetUserGql() user: User
-  ) {
-    this.logger.log(user)
+  findAll(@GetUserGql() user: User) {
+    this.logger.log(user);
     return [];
     // return this.testSourceService.findAll();
   }
@@ -37,8 +35,13 @@ export class TestSourceResolver {
   }
 
   @Mutation(() => TestSource)
-  updateTestSource(@Args('updateTestSourceInput') updateTestSourceInput: UpdateTestSourceInput) {
-    return this.testSourceService.update(updateTestSourceInput.id, updateTestSourceInput);
+  updateTestSource(
+    @Args('updateTestSourceInput') updateTestSourceInput: UpdateTestSourceInput,
+  ) {
+    return this.testSourceService.update(
+      updateTestSourceInput.id,
+      updateTestSourceInput,
+    );
   }
 
   @Mutation(() => TestSource)
